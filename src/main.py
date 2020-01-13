@@ -168,6 +168,7 @@ class MyController(MediaController):
         self.speaker_thread = speaker_thread
 
     def receive_message(self, message, data):
+        logging.info("Received message %s: %s", message, data)
         result = super(MyController, self).receive_message(message, data)
 
         if data["type"] == "MEDIA_STATUS":
@@ -235,7 +236,8 @@ def main(config_file):
     cast.register_handler(controller)
     cast.register_connection_listener(controller)
     cast.register_status_listener(controller)
-
+    cast.wait()
+    
     controller.signal_speakers()
 
     try:
