@@ -9,6 +9,7 @@ black = {version = "*",pre = "true"}
 [packages]
 broadlink = "*"
 PyChromecast = "*"
+toml = "*"
 
 [requires]
 python_version = "3.7"
