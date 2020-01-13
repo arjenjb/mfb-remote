@@ -167,14 +167,6 @@ class MyController(MediaController):
         super(MyController, self).__init__()
         self.speaker_thread = speaker_thread
 
-    def receive_message(self, message, data):
-        result = super(MyController, self).receive_message(message, data)
-
-        if data["type"] == "MEDIA_STATUS":
-            self.signal_speakers()
-
-        return result
-
     def signal_speakers(self):
         if not self.is_active:
             self.speaker_thread.signal_inactive()
@@ -183,21 +175,14 @@ class MyController(MediaController):
         else:
             self.speaker_thread.signal_stopped()
 
+    def new_media_status(self, status):
+        self.signal_speakers()
+
     def new_cast_status(self, status):
         self.signal_speakers()
 
     def new_connection_status(self, status):
         self.signal_speakers()
-
-    def print_status(self):
-        pprint(
-            {
-                "playing": self.is_playing,
-                "paused": self.is_paused,
-                "idle": self.is_idle,
-                "active": self.is_active,
-            }
-        )
 
 
 def main(config_file):
