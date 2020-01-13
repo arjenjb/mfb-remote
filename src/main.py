@@ -235,8 +235,10 @@ def main(config_file):
     cast.register_handler(controller)
     cast.register_connection_listener(controller)
     cast.register_status_listener(controller)
+    cast.wait()
 
     controller.signal_speakers()
+
 
     try:
         while True:
