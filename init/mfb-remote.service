@@ -6,6 +6,7 @@ After=network-online.target
 
 [Service]
 ExecStart=/home/arjen/projects/mfb-remote/run.sh
+Environment=CONFIG_FILE=/etc/mfb-remote.toml
 
 [Install]
 WantedBy=multi-user.target

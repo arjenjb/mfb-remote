@@ -1,6 +1,8 @@
 import argparse
 import datetime
 import logging
+import os
+import sys
 import threading
 import time
 from pprint import pprint
@@ -224,7 +226,6 @@ def main(config_file):
 
     controller.signal_speakers()
 
-
     try:
         while True:
             time.sleep(1)
@@ -234,9 +235,7 @@ def main(config_file):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="The MFB remote daemon")
-    parser.add_argument(
-        "config", metavar="CONFIG_FILE", help="the .toml configuration file"
-    )
+    parser.add_argument("-c", dest="config_file", help="the .toml configuration file")
     parser.add_argument(
         "-v",
         dest="log_level",
@@ -251,4 +250,18 @@ if __name__ == "__main__":
     logging.basicConfig(level=options.log_level)
     logging.debug("Verbose mode enabled")
 
-    main(options.config)
+    if options.config_file:
+        config = options.config_file
+    else:
+        config = os.environ.get('CONFIG_FILE')
+
+    if not config:
+        logging.error("Configuration file not found, provide it using the environment variable CONFIG_FILE or through the command-line option -c [config_file]")
+        parser.print_usage()
+        sys.exit(1)
+    elif not os.path.exists(config):
+        logging.error("The given configuration file was not found")
+        parser.print_usage()
+        sys.exit(1)
+
+    main(config)
